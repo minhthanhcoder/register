@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        #main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #83d58b;
+            min-height: 100vh;
+        }
+        h2 {
+            margin-bottom: 16px;
+            text-align: center;
+            color: deeppink;
+            font-size: 34px;
+            font-weight: 600;
+        }
+
+        .content {
+            
+            background-color: black;
+            background: linear-gradient(to right, #8c72cf, rgb(119, 203, 231));
+            border-radius: 8px;
+            width: 400px;
+            height: 450px;
+            font-size: 16px;
+            padding: 16px;
+
+        }
+
+        #email,
+        #password,
+        #confirmPass {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border-radius: 4px;
+            border: none;
+        }
+
+        label {
+            color: #fff;
+            font-size: 18px
+        }
+
+        #registerBtn {
+            background-color: deeppink;
+            width: 100%;
+            padding: 16px;
+            box-shadow: 0 2px 2px rgb(246, 37, 89);
+            border-radius: 5px;
+            border: none;
+            margin-top: 24px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 3px 3px hsl(307, 84%, 70%);
+        }
+
+        #registerBtn:hover {
+            background-color: #d85ae1;
+        }
+
+        #loi {
+            margin-top: 16px;
+            color: red;
+            font-style: italic;
+        }
+    </style>
+    <div id="main">
+        <div class="content">
+            <h2>Register</h2>
+            <label for="">Email</label><br>
+            <input placeholder="Enter your email address" type="email" name="email" id="email"> <br>
+            <label for="">Password</label><br>
+            <input placeholder="Enter your password" type="password" name="password" id="password"><br>
+            <label for="">Confirm Password</label><br>
+            <input placeholder="Enter your confirm password" type="password" name="confirmPass" id="confirmPass"><br>
+            <input id="registerBtn" onclick="addUser()" type="button" value="Register"><br>
+            <p id="loi"></p>
+        </div>
+    </div>
+    
+
+    <script>
+        let listUser = JSON.parse(localStorage.getItem('listUser'))
+        if (listUser == null) {
+            listUser = [];
+        }
+
+        function addUser() {
+            let userEmail = document.getElementById('email').value;
+            let userPass = document.getElementById('password').value;
+            let userConfirmPass = document.getElementById('confirmPass').value;
+            let userInfo = {
+                email: userEmail,
+                password: userPass,
+                confirm: userConfirmPass,
+            }
+            localStorage.setItem('userinfo', JSON.stringify(userInfo))
+            let userError = '';
+            if (email != '') {
+                let reg_email = /^[A-Za-z0-9]+([_\.\-]?[A-Za-z0-9])*@[A-Za-z0-9]+([\.\-]?[A-Za-z0-9]+)*(\.[A-Za-z]+)+$/;
+                if (reg_email.test(email.value) == false) {
+                    userError += 'Email không hợp lệ.<br/>'
+                    document.getElementById('loi').innerHTML = userError;
+                    return;
+                }
+            }
+            if (password.value === '') {
+                userError += 'Hãy nhập password.<br/>'
+                document.getElementById('loi').innerHTML = userError;
+                return;
+            } else if (password.length < 6 || password.length > 20) {
+                userError += 'Password phải có độ dài từ 6-20 ký tự. <br/>';
+                document.getElementById('loi').innerHTML = userError;
+                return;
+            }
+            if (userInfo.password != userInfo.confirm) {
+                userError += 'Nhập lại mật khẩu chưa chính xác.</br>'
+                document.getElementById('loi').innerHTML = userError;
+                return;
+            }
+            checkUser()
+            function checkUser() {
+                let newUser = JSON.parse(localStorage.getItem('userinfo'));
+                let listUser = JSON.parse(localStorage.getItem('listUser'))
+                for (let i = 0; i < listUser.length; i++) {
+                    if (listUser[i].email === newUser.email) {
+                        userError += 'Tài khoản đã được đăng ký.</br>';
+                        document.getElementById('loi').innerHTML = userError;
+                        document.getElementById('email').value = '';
+                        document.getElementById('password').value = '';
+                        document.getElementById('confirmPass').value = '';
+                        return;
+                    } else {
+                        listUser.push(newUser)
+                        userError = '';
+                        document.getElementById('loi').innerHTML = userError;
+                        localStorage.setItem('listUser', JSON.stringify(listUser))
+                    }
+                }
+
+
+            }
+        }
+
+            //
+
+
+
+
+
+    </script>
+</body>
+
+</html>
